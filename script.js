@@ -22,7 +22,7 @@ function play(){
         }
         levels[i].disabled = true;
     }    
-    document.getElementById("msg").textContent = "Guess a number 1-" + range;
+    document.getElementById("msg").textContent = "Guess a number 1-" + range + " " + name1;
     answer = Math.floor(Math.random()*range) + 1;
     guessCount = 0;
 
@@ -66,19 +66,19 @@ function makeGuess(){
         resetGame();
     }
     else if (guess < answer){
-        msg.textContent = "Too low, try again " + nameFinal;
+        msg.textContent = "Too low, try again. " + nameFinal;
     }
     else{
-        msg.textContent = "Too high, try again " + nameFinal;
+        msg.textContent = "Too high, try again. " + nameFinal;
     }
     if (Math.abs(guess - answer) <= 2){
-        rating.textContent = "Your guess: hot";
+        msg.textContent += "Your guess: hot";
     }
     else if (Math.abs(guess - answer) <= 5){
-        rating.textContent = "Your guess: warm";
+        msg.textContent += "Your guess: warm";
     }
     else {
-        rating.textContent = "Your guess: cold";
+        msg.textContent += "Your guess: cold";
     }
 }
  
@@ -121,6 +121,13 @@ function giveUp(){
     endTimer();
 }
 
+let month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+let monthA = Number(new Date().getMonth());
+monthA = month[monthA];
+let day = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th","13th","14th","15th","16th","17th","18th","19th","20th","21st","22nd","23rd","24th","25th","26th","27th","28th","29th","30th","31st"];
+let dayA = Number(new Date().getDate());
+dayA = day[dayA - 1];
+
 setInterval(() => {
     let hours = new Date().getHours()
     let minutes = new Date().getMinutes()
@@ -128,26 +135,18 @@ setInterval(() => {
     
     if (minutes < 10 && seconds < 10) {
         let livetime = "Current time: " + hours + ":0" + minutes + ":0" + seconds;
-        time.textContent = livetime;
+        date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime
     }
     else if (minutes < 10){
         let livetime = "Current time: " + hours + ":0" + minutes + ":" + seconds;
-        time.textContent = livetime;
+        date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime
     }
     else if (seconds < 10){
         let livetime = "Current time: " + hours + ":" + minutes + ":0" + seconds;
-        time.textContent = livetime;
+        date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime
     }
     else {
-        let livetime = "Current time: " + hours + ":" + minutes + ":" + seconds;
-        time.textContent = livetime;
+        livetime = "Current time: " + hours + ":" + minutes + ":" + seconds;
+        date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime
     }
 }, 1000);
-
-let month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-let monthA = Number(new Date().getMonth());
-monthA = month[monthA];
-let day = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th","13th","14th","15th","16th","17th","18th","19th","20th","21st","22nd","23rd","24th","25th","26th","27th","28th","29th","30th","31st"];
-let dayA = Number(new Date().getDate());
-dayA = day[dayA - 1];
-date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear();
