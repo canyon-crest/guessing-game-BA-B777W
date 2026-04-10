@@ -22,7 +22,7 @@ function play(){
         }
         levels[i].disabled = true;
     }    
-    document.getElementById("msg").textContent = "Guess a number 1-" + range + " " + name1;
+    document.getElementById("msg").textContent = "Guess a number 1-" + range + " " + nameFinal;
     answer = Math.floor(Math.random()*range) + 1;
     guessCount = 0;
 
@@ -127,26 +127,23 @@ monthA = month[monthA];
 let day = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th","13th","14th","15th","16th","17th","18th","19th","20th","21st","22nd","23rd","24th","25th","26th","27th","28th","29th","30th","31st"];
 let dayA = Number(new Date().getDate());
 dayA = day[dayA - 1];
-
+date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". ";
 setInterval(() => {
     let hours = new Date().getHours()
     let minutes = new Date().getMinutes()
     let seconds = new Date().getSeconds()
-    
+    let livetime;
     if (minutes < 10 && seconds < 10) {
-        let livetime = "Current time: " + hours + ":0" + minutes + ":0" + seconds;
-        date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime
+        livetime = "Current time: " + hours + ":0" + minutes + ":0" + seconds;
     }
     else if (minutes < 10){
-        let livetime = "Current time: " + hours + ":0" + minutes + ":" + seconds;
-        date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime
+        livetime = "Current time: " + hours + ":0" + minutes + ":" + seconds;
     }
     else if (seconds < 10){
-        let livetime = "Current time: " + hours + ":" + minutes + ":0" + seconds;
-        date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime
+        livetime = "Current time: " + hours + ":" + minutes + ":0" + seconds;
     }
     else {
         livetime = "Current time: " + hours + ":" + minutes + ":" + seconds;
-        date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime
     }
+    date.textContent = monthA + " " + dayA + ", " + new Date().getFullYear() + ". " + livetime;
 }, 1000);
