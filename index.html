@@ -2,34 +2,319 @@
 <html>
   <head>
     <title>JavaScript Number Guessing Game</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #7dd3fc 0%, #a78bfa 45%, #fbcfe8 100%);
+        color: #111827;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: radial-gradient(circle at top left, rgba(255,255,255,0.65), transparent 28%),
+          radial-gradient(circle at bottom right, rgba(59,130,246,0.22), transparent 35%),
+          linear-gradient(135deg, #7dd3fc 0%, #a78bfa 45%, #fbcfe8 100%);
+      }
+
+      .app-shell {
+        width: min(100%, 760px);
+        padding: 32px;
+        border-radius: 32px;
+        background: rgba(255,255,255,0.85);
+        box-shadow: 0 28px 80px rgba(15, 23, 42, 0.2);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255,255,255,0.7);
+      }
+
+      h1,
+      h3 {
+        margin: 0 0 18px;
+        line-height: 1.15;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 2.6vw, 3rem);
+        letter-spacing: -0.04em;
+      }
+
+      h3 {
+        font-size: 1.05rem;
+        color: #4b5563;
+      }
+
+      #date {
+        font-size: 0.95rem;
+        color: #6b7280;
+        margin-bottom: 24px;
+      }
+
+      .section {
+        display: grid;
+        gap: 18px;
+      }
+
+      .level-group,
+      .controls,
+      .stats-grid,
+      .leaderboard-card {
+        display: grid;
+        gap: 16px;
+      }
+
+      .radio-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      label[for="e"],
+      label[for="m"],
+      label[for="h"] {
+        cursor: pointer;
+        padding: 12px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        background: rgba(255,255,255,0.82);
+        transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        color: #111827;
+      }
+
+      input[type="radio"]:checked + label {
+        background: linear-gradient(135deg, #6366f1, #38bdf8);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-1px);
+      }
+
+      .controls {
+        display: grid;
+        gap: 14px;
+      }
+
+      .button-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .controls .button-row:last-of-type {
+        margin-bottom: 24px;
+      }
+
+      .button-row button,
+      #guessBtn,
+      #giveUpBtn,
+      #playBtn,
+      #themeBtn {
+        border: none;
+        border-radius: 18px;
+        padding: 14px 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+      }
+
+      button:hover:not(:disabled) {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      #playBtn,
+      #guessBtn {
+        background: linear-gradient(135deg, #6366f1, #38bdf8);
+        color: white;
+      }
+
+      #themeBtn,
+      #giveUpBtn {
+        background: rgba(15, 23, 42, 0.08);
+        color: #111827;
+      }
+
+      #guess {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      #guess:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
+      }
+
+      #msg {
+        margin-top: 0;
+        padding: 18px 20px;
+        border-radius: 20px;
+        background: rgba(59, 130, 246, 0.08);
+        color: #1e293b;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stats-grid > div {
+        display: grid;
+        gap: 12px;
+      }
+
+      .stats-grid p,
+      .leaderboard-card li {
+        margin: 0;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.82);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+      }
+
+      .leaderboard-card {
+        padding: 0;
+      }
+
+      .leaderboard-card ol {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+
+      .leaderboard-card li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        background: rgba(255,255,255,0.95);
+      }
+
+      .leaderboard-card li::before {
+        content: counter(item) ".";
+        counter-increment: item;
+        margin-right: 12px;
+        color: #6366f1;
+        font-weight: 700;
+      }
+
+      .leaderboard-card ol {
+        counter-reset: item;
+      }
+
+      body.dark-mode {
+        background: #0f172a;
+        color: #e2e8f0;
+      }
+
+      body.dark-mode .app-shell {
+        background: rgba(15, 23, 42, 0.9);
+        border-color: rgba(255,255,255,0.08);
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
+      }
+
+      body.dark-mode label[for="e"],
+      body.dark-mode label[for="m"],
+      body.dark-mode label[for="h"],
+      body.dark-mode .stats-grid p,
+      body.dark-mode .leaderboard-card li,
+      body.dark-mode #guess,
+      body.dark-mode #themeBtn,
+      body.dark-mode #giveUpBtn {
+        background: rgba(255,255,255,0.04);
+        color: #e2e8f0;
+        border-color: rgba(148,163,184,0.24);
+      }
+
+      body.dark-mode input[type="radio"]:checked + label {
+        background: linear-gradient(135deg, #6366f1, #38bdf8);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-1px);
+      }
+
+      body.dark-mode #msg {
+        background: rgba(99,102,241,0.16);
+        color: #e2e8f0;
+      }
+
+      body.dark-mode #playBtn,
+      body.dark-mode #guessBtn {
+        background: linear-gradient(135deg, #8b5cf6, #38bdf8);
+      }
+    </style>
     <script src="script.js" defer></script>
   </head>
   <body>
-    <h3 id="date"></h3>
+    <div class="app-shell">
+      <h1>Number Guessing Game</h1>
+      <h3 id="date"></h3>
 
-    <h3>Level</h3>
-    <input type="radio" name="level" id="e" value="3" checked><label for="e">Easy</label>
-    <input type="radio" name="level" id="m" value="10"><label for="m">Medium</label>
-    <input type="radio" name="level" id="h" value="100"><label for="h">Hard</label>
+      <section class="section level-group">
+        <h2>Level</h2>
+        <div class="radio-group">
+          <input type="radio" name="level" id="e" value="3" checked><label for="e">Easy</label>
+          <input type="radio" name="level" id="m" value="10"><label for="m">Medium</label>
+          <input type="radio" name="level" id="h" value="100"><label for="h">Hard</label>
+        </div>
+      </section>
 
-    <button id="playBtn">Play</button>
+      <section class="controls">
+        <div class="button-row">
+          <button id="playBtn">Play</button>
+          <button id="themeBtn">Toggle Dark Mode</button>
+        </div>
 
-    <h3 id="msg">Select a Level</h3>
-    <input type="text" id="guess">
-    <button id="guessBtn" disabled>Guess</button>
-    <button id="giveUpBtn" disabled>Give Up</button>
+        <h3 id="msg">Select a Level</h3>
+        <input type="text" id="guess" placeholder="Enter your guess...">
+        <div class="button-row">
+          <button id="guessBtn" disabled>Guess</button>
+          <button id="giveUpBtn" disabled>Give Up</button>
+        </div>
+      </section>
 
-    <h3>Stats</h3>
-    <p id="wins">Total wins: 0</p>
-    <p id="avgScore">Average Score: </p>
-    <p id="fastest">Fastest Game: </p>
-    <p id="avgTime">Average Time: </p>
-
-    <h3>Leaderboard</h3>
-    <ol>
-      <li name="leaderboard">100</li>
-      <li name="leaderboard">100</li>
-      <li name="leaderboard">100</li>
-    </ol>
+      <section class="section stats-grid">
+        <div>
+          <h3>Stats</h3>
+          <p id="wins">Total wins: 0</p>
+          <p id="avgScore">Average Score: </p>
+          <p id="fastest">Fastest Game: </p>
+          <p id="avgTime">Average Time: </p>
+        </div>
+        <div class="leaderboard-card">
+          <h3>Leaderboard</h3>
+          <ol>
+            <li name="leaderboard">100</li>
+            <li name="leaderboard">100</li>
+            <li name="leaderboard">100</li>
+          </ol>
+        </div>
+      </section>
+    </div>
   </body>
 </html>

@@ -12,6 +12,13 @@ const scores = [];
 document.getElementById("playBtn").addEventListener("click", play);
 document.getElementById("guessBtn").addEventListener("click", makeGuess);
 document.getElementById("giveUpBtn").addEventListener("click", giveUp);
+document.getElementById("themeBtn").addEventListener("click", toggleTheme);
+
+function toggleTheme(){
+    document.body.classList.toggle("dark-mode");
+    const isDark = document.body.classList.contains("dark-mode");
+    document.getElementById("themeBtn").textContent = isDark ? "Toggle Light Mode" : "Toggle Dark Mode";
+}
 
 function play(){
     range = 0;
@@ -61,15 +68,16 @@ function makeGuess(){
     }
     guessCount++;
     if(guess == answer){
-        msg.textContent = "Correct! It took " + guessCount + " tries " + nameFinal;
+        msg.textContent = "Correct! It took " + guessCount + " tries " + nameFinal + ". ";
         updateScore(guessCount);
         resetGame();
+        return;
     }
     else if (guess < answer){
-        msg.textContent = "Too low, try again. " + nameFinal;
+        msg.textContent = "Too low, try again " + nameFinal + ". ";
     }
     else{
-        msg.textContent = "Too high, try again. " + nameFinal;
+        msg.textContent = "Too high, try again " + nameFinal + ". ";
     }
     if (Math.abs(guess - answer) <= 2){
         msg.textContent += "Your guess: hot";
